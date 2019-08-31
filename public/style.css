@@ -1,0 +1,32 @@
+.search{
+				margin-top:100px;
+			}
+			.heading{
+				
+                padding:0px 10px;
+			}
+			.list{
+				border-top:1px solid #ccc;
+				
+			}
+			.result{
+				margin-top:50px;
+			}
+			.item{
+				
+				border:2px solid #eee;
+				
+			}
+
+			.description{
+				background-color: #111;
+    opacity: 0.9;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2em;
+    height: 80px;
+			}
+
+			#root{
+				width:100%;
+			}
