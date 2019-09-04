@@ -15,12 +15,9 @@ router.get('/search',(req,res) => {
 	}
     
     
-       https.get(baseUrl+querystring,resp => {
-       	resp.on('data',d => {
-             console.log(d);
-       		res.send(d)});
-       })
-     }
+       fetch(baseUrl+querystring)
+       .then(response => response.json())
+       .then()
   // results = fire apple server with this query
   // return the response
 //    function(req,res,next){

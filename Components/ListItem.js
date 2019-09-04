@@ -18,7 +18,7 @@ class ListItem extends Component {
         			<div className="card-title">{item.name}</div>
                      <div className="card-text">{item.genre}</div>
                      <a href={item.url}>View Link </a>
-                     <a href="#" className="float-right"  onClick={e => this.props.toggleFavorite(item.id,item.genre)}><FaHeart color={item.isFavorite?'red':'black'}/></a>
+                     <a href="#" className="float-right"  onClick={e => this.props.toggleFavorite(e,item.id,item.genre)}><FaHeart color={item.isFavorite?'red':'black'}/></a>
                      </div>  
         		</div>
 

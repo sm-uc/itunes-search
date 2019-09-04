@@ -16,29 +16,80 @@ class App extends Component{
 
    }
 
-  handleFavorites(itemid,key){
-  	 var newState = this.state.searchList[key].map((item) => {
+   componentDidMount(){
+     const cachedItems = JSON.parse(localStorage.getItem('favoriteList'));
+     var listObj = {};
 
+     if(cachedItems){
+       cachedItems.forEach((item) => {
+         var key = item.genre;
+         if(listObj[key]){
+           listObj[key].push(item);
+         }
+         else{
+           listObj[key] = [item];
+         }
+       });
+      this.setState({
+        searchList:listObj
+        
+      });
+     }
+     else{
+      this.setState({
+        searchList:{},
+        favoriteList:[]
+      });
+     }
+     }
+     
+   
+
+  handleFavorites(e,itemid,key){
+    e.preventDefault();
+    const getItems = JSON.parse(localStorage.getItem("favoriteList"));
+    var favorite={};
+  	 var newState = this.state.searchList[key].map((item) => {
+      
   	 	if(item.id === itemid){
-  	 		item.isFavorite = !item.isFavorite;
+         item.isFavorite = !item.isFavorite;
+         favorite = item;
   	 	}
   	 	return item;
 
-  	 })
-  	 console.log(newState);
+     })
+             
+  	           if(favorite.isFavorite == true){
                 this.setState({
                  
                ...this.state.searchList,
-               [key] : newState
-           //favoriteList:this.state.favoriteList.concat(favorite)
+               [key] : newState,
+           favoriteList:this.state.favoriteList.concat(favorite)
           
        })
+       localStorage.setItem("favoriteList",JSON.stringify(getItems.concat(favorite)));
+       
+      }
+      else{
+        this.setState({
+                 
+          ...this.state.searchList,
+          [key] : newState,
+      favoriteList:this.state.favoriteList.filter((item) => item.id !== favorite.id)
+        })
+
+        localStorage.setItem("favoriteList",JSON.stringify(getItems.filter((item) => item.id !== favorite.id)));
+      }
+      
+       
+      
    }
 
   onSearch(query){
   	var listObj ={};
   	const baseUrl = 'https://itunes.apple.com/search';
-  	const querystring = "?term=" + query;
+    const querystring = "?term=" + query;
+    const cachedItems = JSON.parse(localStorage.getItem('favoriteList'));
    axios.get(baseUrl+querystring)
   .then(resp => {
 	   	
@@ -47,7 +98,7 @@ class App extends Component{
 
        resObj.forEach((item) => {
        	if(item.kind !== undefined){
-       		console.log(item.kind);
+       		
        const key = item.kind.toString().toUpperCase();
         var obj ={};
           obj.id = item.trackId;
@@ -55,7 +106,19 @@ class App extends Component{
           obj.artwork = item.artworkUrl100;
           obj.genre = item.kind.toString().toUpperCase();
           obj.url = item.trackViewUrl;
-          obj.isFavorite=false;
+          if(cachedItems){
+          cachedItems.map((item) => {
+          
+          if(item.id === obj.id){
+            obj.isFavorite = item.isFavorite
+          }
+        
+        });
+          }
+          else{
+            obj.isFavorite=false;
+          }
+          
            if(listObj[key] != null){
               listObj[key].push(obj);
 
